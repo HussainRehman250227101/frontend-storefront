@@ -55,6 +55,6 @@ export const userProfileRequest = async ():Promise<userDataInterface> => {
   };
 };
 
-export const userProfilePostRequest = async():Promise<> => {
+// export const userProfilePostRequest = async():Promise<> => {
   
-}
+// }
