@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "../app/store";
-import { selectstatus, selectUser } from "../features/Auth/AuthSlice";
+import {  selectUser } from "../features/Auth/AuthSlice";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { userDataInterface } from "../features/Auth/AuthInterfaces";
 import { useEffect } from "react";
@@ -41,10 +41,14 @@ const ProfilePage = () => {
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
     try {
+      console.log(data);
+      
       // Dispatch Redux Toolkit thunk here
       // await dispatch(updateProfile(userData))
     } catch (error) {
     } finally {
+      console.log('passed');
+      
     }
   };
   const dispatch =useDispatch<AppDispatch>()
