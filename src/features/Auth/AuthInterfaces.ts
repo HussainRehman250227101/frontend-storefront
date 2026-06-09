@@ -5,7 +5,7 @@ export interface signupPostInterface {
     first_name:string,
     last_name:string,
     phone:number,
-    profile_iamge = File,
+    profile_iamge : File,
     birth_date:Date
 }
 
