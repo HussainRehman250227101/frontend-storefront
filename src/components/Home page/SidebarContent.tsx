@@ -1,30 +1,76 @@
+import { useEffect, useState } from "react";
 import {
   Box,
+  Button,
   Flex,
-  useDisclosure,
+  HStack,
   Text,
-  Icon,
-  Collapsible,
+  VStack,
 } from "@chakra-ui/react";
-import { AiFillGift } from "react-icons/ai";
-import { BsGearFill } from "react-icons/bs";
-import { MdHome, MdKeyboardArrowRight } from "react-icons/md";
-import NavItem from "./NavItem";
-import { HiCode, HiCollection } from "react-icons/hi";
-import { FaClipboardCheck, FaRss } from "react-icons/fa";
-import { FaShopify, FaSlack } from "react-icons/fa";
-
-import { SiZapier } from "react-icons/si";
+import { useSearchParams } from "react-router-dom";
+import type { Collection } from "../../features/Products/ProductInterfaces";
+import { fetchCollections } from "../../features/Products/ProductRequests";
+import { useColorMode } from "../ui/color-mode";
 
 const SidebarContent = () => {
-  const integrations = useDisclosure();
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [loadingCollections, setLoadingCollections] = useState(false);
+  const [collectionsError, setCollectionsError] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const selectedCollection = searchParams.get("collection");
+
+  const {colorMode}=useColorMode()
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadCollections = async () => {
+      setLoadingCollections(true);
+      setCollectionsError(null);
+
+      try {
+        const response = await fetchCollections();
+        if (mounted) {
+          setCollections(response);
+        }
+      } catch {
+        if (mounted) {
+          setCollectionsError("Unable to load collections");
+        }
+      } finally {
+        if (mounted) {
+          setLoadingCollections(false);
+        }
+      }
+    };
+
+    loadCollections();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const setCollection = (collectionId?: number) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("page");
+
+    if (typeof collectionId === "number") {
+      nextParams.set("collection", String(collectionId));
+    } else {
+      nextParams.delete("collection");
+    }
+
+    setSearchParams(nextParams);
+  };
 
   return (
     <Box
-      borderRadius={"10px"}
+      borderRadius="10px"
       w="60"
       minH="100vh"
-      bg="white"
+      bg={colorMode === 'light'? "gray.100":"white"}
       borderRightWidth="1px"
       position="sticky"
       top="0"
@@ -34,48 +80,67 @@ const SidebarContent = () => {
       }}
     >
       <Flex px="4" py="5" align="center">
-        <Text fontSize="2xl" fontWeight="bold" color="blue.500">
-          My App
+        <Text fontSize="2xl" fontWeight="bold" color="orange.500">
+          Collections
         </Text>
       </Flex>
 
       <Flex direction="column" fontSize="sm">
-        <NavItem icon={MdHome}>Home</NavItem>
+        
 
-        <NavItem icon={FaRss}>Articles</NavItem>
+        <Box px="4" py="3">
+      
 
-        <NavItem icon={HiCollection}>Collections</NavItem>
+          <VStack align="stretch" gap={1}>
+            <Button
+              variant={!selectedCollection ? "solid" : "ghost"}
+              colorPalette={!selectedCollection ? "orange" : "gray"}
+              justifyContent="space-between"
+              width="full"
+              borderRadius="lg"
+              onClick={() => setCollection()}
+              aria-pressed={!selectedCollection}
+            >
+              <HStack justify="space-between" width="full">
+                <Text>All Products</Text>
+                <Text fontSize="xs" color="fg.muted">
+                  {loadingCollections ? "..." : collections.reduce((sum, item) => sum + item.products_count, 0)}
+                </Text>
+              </HStack>
+            </Button>
 
-        <NavItem icon={FaClipboardCheck}>Checklists</NavItem>
+            {collections.map((collection) => {
+              const isSelected = selectedCollection === String(collection.id);
 
-        <NavItem icon={HiCode} onClick={integrations.onToggle}>
-          Integrations
-          <Icon
-            as={MdKeyboardArrowRight}
-            ml="auto"
-            transform={integrations.open ? "rotate(90deg)" : ""}
-          />
-        </NavItem>
+              return (
+                <Button
+                  key={collection.id}
+                  variant={isSelected ? "solid" : "ghost"}
+                  colorPalette={isSelected ? "orange" : "gray"}
+                  justifyContent="space-between"
+                  width="full"
+                  borderRadius="lg"
+                  onClick={() => setCollection(collection.id)}
+                  aria-pressed={isSelected}
+                  disabled={loadingCollections}
+                >
+                  <HStack justify="space-between" width="full">
+                    <Text textTransform="capitalize">{collection.title}</Text>
+                    <Text fontSize="xs" color="fg.muted">
+                      {collection.products_count}
+                    </Text>
+                  </HStack>
+                </Button>
+              );
+            })}
+          </VStack>
 
-        <Collapsible.Root open={integrations.open}>
-          <Collapsible.Content>
-            <NavItem icon={FaShopify} pl="12" py="2">
-              Shopify
-            </NavItem>
-
-            <NavItem icon={FaSlack} pl="12" py="2">
-              Slack
-            </NavItem>
-
-            <NavItem icon={SiZapier} pl="12" py="2">
-              Zapier
-            </NavItem>
-          </Collapsible.Content>
-        </Collapsible.Root>
-
-        <NavItem icon={AiFillGift}>Changelog</NavItem>
-
-        <NavItem icon={BsGearFill}>Settings</NavItem>
+          {collectionsError ? (
+            <Text mt={2} fontSize="xs" color="fg.error">
+              {collectionsError}
+            </Text>
+          ) : null}
+        </Box>
       </Flex>
     </Box>
   );
