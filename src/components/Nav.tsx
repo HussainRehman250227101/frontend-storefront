@@ -32,7 +32,7 @@ import { LuShoppingBag } from "react-icons/lu";
 import { NavLink, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-
+import { LuExternalLink } from "react-icons/lu";
 import type { AppDispatch, RootState } from "../app/store";
 import { logout } from "../features/Auth/AuthSlice";
 import { ColorModeButton } from "./ui/color-mode";
@@ -41,6 +41,7 @@ type NavItem = {
   label: string;
   to: string;
   icon?: ElementType;
+  external?: boolean;
 };
 
 type AuthActionsProps = {
@@ -63,6 +64,11 @@ const NAV_ITEMS: NavItem[] = [
     label: "Cart",
     to: "/cart",
     icon: FaShoppingCart,
+  },
+  {
+    label: "APIs",
+    to: "https://api.hussaindev.tech/store/",
+    external: true,
   },
 ];
 
@@ -260,10 +266,18 @@ function NavItemButton({ item }: { item: NavItem }) {
       _hover={{ bg: "bg.subtle", color: "fg" }}
       _currentPage={{ bg: "orange.subtle", color: "orange.fg" }}
     >
-      <NavLink to={item.to}>
-        {ItemIcon ? <Icon as={ItemIcon} /> : null}
-        {item.label}
-      </NavLink>
+      {item.external ? (
+        <a href={item.to} target="_blank" rel="noopener noreferrer">
+          {ItemIcon && <Icon as={ItemIcon} />}
+          {item.label}
+          <Icon as={LuExternalLink} boxSize="3" />
+        </a>
+      ) : (
+        <NavLink to={item.to}>
+          {ItemIcon && <Icon as={ItemIcon} />}
+          {item.label}
+        </NavLink>
+      )}
     </Button>
   );
 }
@@ -422,10 +436,25 @@ function MobileNavigation({
                           color: "orange.fg",
                         }}
                       >
-                        <NavLink to={item.to} onClick={onClose}>
-                          {item.icon ? <Icon as={item.icon} /> : null}
-                          {item.label}
-                        </NavLink>
+                        {item.external ? (
+                          <a
+                            href={item.to}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={onClose}
+                          >
+                            <HStack gap="1">
+                              {item.icon && <Icon as={item.icon} />}
+                              <Span>{item.label}</Span>
+                              <Icon as={LuExternalLink} boxSize="3" />
+                            </HStack>
+                          </a>
+                        ) : (
+                          <NavLink to={item.to} onClick={onClose}>
+                            {item.icon && <Icon as={item.icon} />}
+                            {item.label}
+                          </NavLink>
+                        )}
                       </Button>
                     </Box>
                   ))}
@@ -443,7 +472,11 @@ function MobileNavigation({
                     onClick={handleMobileLogout}
                     _hover={{ bg: "bg.subtle", color: "fg" }}
                   >
-                    <Avatar.Root size="2xs" bg="orange.subtle" color="orange.fg">
+                    <Avatar.Root
+                      size="2xs"
+                      bg="orange.subtle"
+                      color="orange.fg"
+                    >
                       <Avatar.Fallback name="hussain khan" />
                     </Avatar.Root>
                     Logout
