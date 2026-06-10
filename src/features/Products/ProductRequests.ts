@@ -4,7 +4,7 @@ import type { Collection, FetchProductsParams } from './ProductInterfaces'
 export const fetchproducts = async ({ page, collection }: FetchProductsParams)=> {
     const params: Record<string, number> = { page }
     if (typeof collection === "number") {
-        params.collection = collection
+        params.collection_id = collection
     }
 
     const response = await api.get('/store/products/', {
