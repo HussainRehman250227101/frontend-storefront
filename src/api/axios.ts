@@ -2,8 +2,9 @@ import axios from "axios";
 
 
 const api = axios.create({
-    baseURL:'http://localhost:8000'
+    baseURL:'https://api.hussaindev.tech'
 })
+// http://localhost:8000
 // https://api.hussaindev.tech
 
 api.interceptors.request.use((config)=>{
