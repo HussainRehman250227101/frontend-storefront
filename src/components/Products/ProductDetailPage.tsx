@@ -225,6 +225,7 @@ export default function ProductDetailPage() {
                 fontWeight="semibold"
                 onClick={() => addToCart(product.id)}
                 aria-label={`Add ${product.title} to cart`}
+                disabled = {product.inventory===0}
               >
                 <Icon as={FaShoppingCart} />
                 Add to Cart
