@@ -1,5 +1,7 @@
+
 import api from '../../api/axios'
 import type { Collection, FetchProductsParams } from './ProductInterfaces'
+
 
 export const fetchproducts = async ({ page, collection }: FetchProductsParams)=> {
     const params: Record<string, any> = { page }
@@ -18,3 +20,10 @@ export const fetchCollections = async (): Promise<Collection[]> => {
     return response.data
 }
 
+
+export const fetchProductReviews = async (product_id:number) => {
+
+    const response = await api.get(`/store/products/${product_id}/reviews/`)
+    return response.data
+
+}

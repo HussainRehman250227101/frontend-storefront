@@ -2,8 +2,9 @@ import axios from "axios";
 
 
 const api = axios.create({
-    baseURL:'https://api.hussaindev.tech'
+    baseURL:'http://localhost:8000'
 })
+// https://api.hussaindev.tech
 
 api.interceptors.request.use((config)=>{
     let token = localStorage.getItem('access')

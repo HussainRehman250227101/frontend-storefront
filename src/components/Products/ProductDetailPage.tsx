@@ -12,9 +12,11 @@ import {
   Text,
   Badge,
   NumberInput,
+  Flex,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { Star } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import type { product } from "../../features/Products/ProductInterfaces";
 import {
@@ -27,18 +29,23 @@ import { selectCartItems } from "../../features/Cart/CartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import type { AppDispatch, RootState } from "../../app/store";
 import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
+import { fetchProductReviews } from "../../features/Products/ProductRequests";
+import { toast } from "react-toastify";
+import type { Review } from "./ReviewCard";
+import ReviewCard from "./ReviewCard";
 
 export default function ProductDetailPage() {
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
+
   const cartItems = useSelector<RootState, itemType[] | undefined>(
     selectCartItems,
   );
 
   const product: product = location.state?.product;
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.image);
-
   const [quantity, setQuantity] = useState(1);
+
   const cartItem = useMemo(
     () =>
       Array.isArray(cartItems)
@@ -57,8 +64,9 @@ export default function ProductDetailPage() {
       await dispatch(postItemToCart(data));
       dispatch(getCart());
     },
-    [dispatch,quantity],
+    [dispatch, quantity],
   );
+
   const removeFromCart = useCallback(
     async (itemId: number) => {
       await dispatch(deleteItemFromCart(itemId));
@@ -67,7 +75,24 @@ export default function ProductDetailPage() {
     [dispatch],
   );
 
+  const [reviews, setReviews] = useState<Review[]>([]);
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const response: Review[] = await fetchProductReviews(product.id);
+        setReviews(response);
+      } catch (err) {
+        return toast.error(
+          "something went wrong with the Reviews, reload page!",
+        );
+      }
+    };
+
+    loadReviews();
+  }, [product.id]);
+
   return (
+    
     <Box maxW="1400px" mx="auto" px={6} py={10}>
       <Grid
         templateColumns={{
@@ -225,7 +250,7 @@ export default function ProductDetailPage() {
                 fontWeight="semibold"
                 onClick={() => addToCart(product.id)}
                 aria-label={`Add ${product.title} to cart`}
-                disabled = {product.inventory===0}
+                disabled={product.inventory === 0}
               >
                 <Icon as={FaShoppingCart} />
                 Add to Cart
@@ -244,7 +269,31 @@ export default function ProductDetailPage() {
           </Stack>
         </GridItem>
       </Grid>
+      <Box mt={16}>
+        <Stack gap={8}>
+          <Flex justify="start" align="center">
+            <Heading size="2xl">Customer Reviews</Heading>
+
+            <Badge colorPalette="blue" px={3} py={1} mx={3} borderRadius="full">
+              {reviews.length} Review(s)
+            </Badge>
+          </Flex>
+
+          {reviews.length === 0 ? (
+            <Box textAlign="center" py={12} borderWidth="1px" borderRadius="xl">
+              <Text color="fg.muted">
+                No reviews yet. Be the first to review this product.
+              </Text>
+            </Box>
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
+              {reviews.map((review) => (
+                <ReviewCard key={review.id} review={review} />
+              ))}
+            </SimpleGrid>
+          )}
+        </Stack>
+      </Box>
     </Box>
   );
 }
-
