@@ -35,7 +35,7 @@ const Home = () => {
   const currentPage = useMemo(() => {
     const pageParam = searchParams.get("page");
     const parsedPage = pageParam ? Number(pageParam) : 1;
-
+      
     if (!Number.isFinite(parsedPage) || parsedPage < 1) {
       return 1;
     }

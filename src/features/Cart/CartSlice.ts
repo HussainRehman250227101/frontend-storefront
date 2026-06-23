@@ -54,6 +54,7 @@ const cartSlice = createSlice({
         })
         .addCase(deleteItemFromCart.fulfilled,(state)=>{
             state.status = 'succeeded';
+            toast.success('deleted from cart successfully!')
         })
         .addCase(deleteItemFromCart.rejected,(state,action)=>{
             state.status = 'failed';
@@ -66,9 +67,11 @@ const cartSlice = createSlice({
         
         .addCase(reduceItemQuantityInCart.pending,(state)=>{
             state.status = 'loading'
+            
         })
         .addCase(reduceItemQuantityInCart.fulfilled,(state)=>{
             state.status = 'succeeded';
+            toast.success('quantity reduced successfully!')
         })
         .addCase(reduceItemQuantityInCart.rejected,(state,action)=>{
             state.status = 'failed';

@@ -25,6 +25,7 @@ import {
   postItemToCart,
 } from "../../features/Cart/CartThunk";
 import type { product } from "../../features/Products/ProductInterfaces";
+import { Link } from "react-router";
 
 interface Props {
   product: product;
@@ -128,6 +129,8 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
         },
       }}
     >
+      <Link to={`/${product.id}`}  state={{product}}>
+      
       <Box position="relative" overflow="hidden" bg="bg.subtle">
         <AspectRatio ratio={4 / 3}>
           <Image
@@ -219,6 +222,8 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
           ) : null}
         </HStack>
       </Card.Body>
+
+      </Link>
 
       <Card.Footer p={{ base: 4, md: 5 }} pt="0">
         {cartItem ? (

@@ -2,7 +2,7 @@ import api from '../../api/axios'
 import type { Collection, FetchProductsParams } from './ProductInterfaces'
 
 export const fetchproducts = async ({ page, collection }: FetchProductsParams)=> {
-    const params: Record<string, number> = { page }
+    const params: Record<string, any> = { page }
     if (typeof collection === "number") {
         params.collection_id = collection
     }
