@@ -17,7 +17,7 @@ export const router = createBrowserRouter(
             <Route path="login" element={<LoginPage/>}/>
             <Route path="signup" element={<SignupPage/>}/>
             <Route path="profile" element={<ProfilePage/>}/>
-            <Route path="/products/:id" element={<ProductDetailPage/>}/>
+            <Route path="products/:id" element={<ProductDetailPage/>}/>
             <Route path="*" element={<NotFound/>} />
         </Route>
     )
