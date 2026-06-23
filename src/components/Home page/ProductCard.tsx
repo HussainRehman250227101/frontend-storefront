@@ -129,7 +129,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
         },
       }}
     >
-      <Link to={`/${product.id}`}  state={{product}}>
+      <Link to={`/products/${product.id}`}  state={{product}}>
       
       <Box position="relative" overflow="hidden" bg="bg.subtle">
         <AspectRatio ratio={4 / 3}>

@@ -24,12 +24,12 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { memo, useCallback } from "react";
-import type { ElementType } from "react";
+import { memo, useCallback, useState } from "react";
+import { type ElementType } from "react";
 import { AiFillBell, AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
 import { FaShoppingCart } from "react-icons/fa";
 import { LuShoppingBag } from "react-icons/lu";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { LuExternalLink } from "react-icons/lu";
@@ -283,6 +283,23 @@ function NavItemButton({ item }: { item: NavItem }) {
 }
 
 function SearchField() {
+  const [searchParams , setSearchParams]=useSearchParams()
+  const [searchValue,SetSearchValue]=useState(searchParams.get('search') ?? "")
+
+  const enterPressed = ()=>{
+
+     const nextParams = new URLSearchParams(searchParams);
+
+     if (searchValue){
+      nextParams.set('search',String(searchValue))
+    }else{
+      nextParams.delete('search')
+    }
+
+    setSearchParams(nextParams)
+
+  }
+
   return (
     <Box role="search" w="full">
       <InputGroup
@@ -290,6 +307,9 @@ function SearchField() {
         startElementProps={{ pointerEvents: "none" }}
       >
         <Input
+          value = {searchValue}
+          onChange={(e)=>{ SetSearchValue(e.target.value)}}
+          onKeyDown={(e)=> e.key === 'Enter' ? enterPressed() : null}
           id="site-search"
           aria-label="Search products"
           type="search"

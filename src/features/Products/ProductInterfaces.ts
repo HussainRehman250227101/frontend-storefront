@@ -31,7 +31,8 @@ export interface Collection {
 
 export interface FetchProductsParams {
     page: number,
-    collection?: number
+    collection?: number,
+    search?:string
 }
 
 export interface productInitialState {

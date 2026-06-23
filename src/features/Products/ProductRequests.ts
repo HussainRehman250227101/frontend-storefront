@@ -3,10 +3,13 @@ import api from '../../api/axios'
 import type { Collection, FetchProductsParams } from './ProductInterfaces'
 
 
-export const fetchproducts = async ({ page, collection }: FetchProductsParams)=> {
+export const fetchproducts = async ({ page, collection,search }: FetchProductsParams)=> {
     const params: Record<string, any> = { page }
     if (typeof collection === "number") {
         params.collection_id = collection
+    }
+    if (typeof search === "string") {
+        params.search = search
     }
 
     const response = await api.get('/store/products/', {

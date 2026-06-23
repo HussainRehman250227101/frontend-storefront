@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { Star } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router";
+import { useParams } from "react-router";
 import type { product } from "../../features/Products/ProductInterfaces";
 import {
   deleteItemFromCart,
@@ -33,16 +33,21 @@ import { fetchProductReviews } from "../../features/Products/ProductRequests";
 import { toast } from "react-toastify";
 import type { Review } from "./ReviewCard";
 import ReviewCard from "./ReviewCard";
+import { selectProducts } from "../../features/Products/ProductSlice";
+
 
 export default function ProductDetailPage() {
-  const location = useLocation();
+  
+  const {id} = useParams()
   const dispatch = useDispatch<AppDispatch>();
 
   const cartItems = useSelector<RootState, itemType[] | undefined>(
     selectCartItems,
   );
+  const products = useSelector(selectProducts);
 
-  const product: product = location.state?.product;
+  const product:product = products.filter((p)=> p.id===Number(id))[0]
+  
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.image);
   const [quantity, setQuantity] = useState(1);
 

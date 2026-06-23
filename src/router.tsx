@@ -6,6 +6,7 @@ import LoginPage from "./features/Auth/components/login";
 import SignupPage from "./features/Auth/components/signup";
 import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./components/Products/ProductDetailPage";
+import NotFound from "./components/NotFound";
 
 
 export const router = createBrowserRouter(
@@ -16,7 +17,8 @@ export const router = createBrowserRouter(
             <Route path="login" element={<LoginPage/>}/>
             <Route path="signup" element={<SignupPage/>}/>
             <Route path="profile" element={<ProfilePage/>}/>
-            <Route path="/:id" element={<ProductDetailPage/>}/>
+            <Route path="/products/:id" element={<ProductDetailPage/>}/>
+            <Route path="*" element={<NotFound/>} />
         </Route>
     )
 ) 

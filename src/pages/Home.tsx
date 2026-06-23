@@ -23,7 +23,7 @@ import { fetchProducts } from "../features/Products/productThunk";
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
   const products: product[] = useSelector(selectProducts);
-  const status = useSelector((state: RootState) => state.products.status);
+  const status = useSelector<RootState>((state: RootState) => state.products.status);
   const error = useSelector((state: RootState) => state.products.error);
   const productsCount = useSelector(
     (state: RootState) => state.products.productsCount,
@@ -57,6 +57,15 @@ const Home = () => {
     return Math.floor(parsedCollection);
   }, [searchParams]);
 
+    const searchQuery = useMemo(() => {
+    const query = searchParams.get("search");
+    if (!query) {
+      return undefined;
+    }
+    return query;
+  }, [searchParams]);
+
+
   const pageSize = useMemo(() => {
     return products.length > 0 ? products.length : 1;
   }, [products.length]);
@@ -71,10 +80,13 @@ const Home = () => {
       return;
     }
 
+    // if ()
+
     dispatch(
       fetchProducts({
         page: currentPage,
         collection: selectedCollection,
+        search : searchQuery
       }),
     );
   }, [currentPage, dispatch, searchParams, selectedCollection, setSearchParams]);
