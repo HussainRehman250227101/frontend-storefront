@@ -244,6 +244,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
             variant="solid"
             w="full"
             colorPalette="orange"
+            disabled={product.inventory===0}
             rounded="lg"
             fontWeight="semibold"
             onClick={() => addToCart(product.id)}

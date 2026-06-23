@@ -242,7 +242,7 @@ const Cart = () => {
               </Text>
             </Box> */}
 
-            <Button size="lg" colorPalette="red" mt={4}>
+            <Button size="lg" colorPalette="red" mt={4} disabled>
               Check Out
             </Button>
 
