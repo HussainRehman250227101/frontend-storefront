@@ -20,7 +20,9 @@ export interface itemType {
     total_price: number
 }
 
-export type productIds = Record<number,true>
+export type productIds ={
+     [key:number]:boolean
+}
 
 export interface cartType {
     id:string,

@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createCart, fetchCart, addToCart, removeFromCart, reducequantityofitemFromCart } from "./CartRequests";
 import axios from "axios";
 import type { cartType, postToCart } from "./CartInterfaces";
+import type { RootState } from "../../app/store";
 
 export const getCart = createAsyncThunk<cartType>(
   "post/fetchCart",
@@ -81,7 +82,7 @@ export const reduceItemQuantityInCart = createAsyncThunk(
 
 export const deleteItemFromCart = createAsyncThunk(
   "delete/cartitem",
-  async (item_id:number, thunkAPI) => {
+  async (product_id:number, thunkAPI) => {
     let cart_id = localStorage.getItem("cart");
     if (!cart_id) {
       const action = await thunkAPI.dispatch(getCart());
@@ -92,9 +93,14 @@ export const deleteItemFromCart = createAsyncThunk(
         throw new Error("cart creation failed! ");
       }
     }
-    try {
-      const response = await removeFromCart(cart_id, item_id);
-      return response;
+
+    const state = thunkAPI.getState() as RootState
+    const item = state.cart.cart?.items.find(i=>i.product.id === product_id)
+    try { 
+      if (item) {
+        const response = await removeFromCart(cart_id, item.id);
+        return response;
+      }
     } catch (err) {
       if (axios.isAxiosError(err)) {
         return thunkAPI.rejectWithValue(err.response?.data);

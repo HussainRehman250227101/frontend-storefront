@@ -45,8 +45,8 @@ const Cart = () => {
   const itemDispatch = useDispatch<AppDispatch>();
   const cartDispatch = useDispatch<AppDispatch>();
 
-  const removefromcart = async (item_id: number) => {
-    await itemDispatch(deleteItemFromCart(item_id));
+  const removefromcart = async (product_id: number) => {
+    await itemDispatch(deleteItemFromCart(product_id));
     cartDispatch(getCart());
   };
 
@@ -209,7 +209,7 @@ const Cart = () => {
                       aria-label="Remove item"
                       variant="ghost"
                       colorPalette="red"
-                      onClick={() => removefromcart(item.id)}
+                      onClick={() => removefromcart(item.product.id)}
                     >
                       <LuX />
                     </IconButton>

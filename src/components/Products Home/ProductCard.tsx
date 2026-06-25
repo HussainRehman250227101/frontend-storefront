@@ -23,18 +23,16 @@ import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "../../app/store";
 import dummy from "../../assets/dummy.jpg";
-import type { itemType, postToCart } from "../../features/Cart/CartInterfaces";
-import { selectCartItems } from "../../features/Cart/CartSlice";
+import type { postToCart } from "../../features/Cart/CartInterfaces";
+
 import {
   deleteItemFromCart,
-  getCart,
   postItemToCart,
 } from "../../features/Cart/CartThunk";
 import type { product } from "../../features/Products/ProductInterfaces";
 import { Link } from "react-router";
 import FireIcon from "../ui/FIreIcon";
 import { LuTrophy } from "react-icons/lu";
-
 
 interface Props {
   product: product;
@@ -60,17 +58,8 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
 
 const ProductCard = memo(function ProductCard({ product }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const cartItems = useSelector<RootState, itemType[] | undefined>(
-    selectCartItems,
-  );
-
-  const cartItem = useMemo(
-    () =>
-      Array.isArray(cartItems)
-        ? cartItems.find((item) => item.product.id === product.id)
-        : undefined,
-    [cartItems, product.id],
-  );
+  
+  const inCart = useSelector((state:RootState)=> state.cart.productIDs[product.id])
 
   const imageSrc = useMemo(() => {
     const apiImage = product.images?.[0]?.image?.trim();
@@ -93,25 +82,28 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
   const reviewCount = getReviewCount(product);
 
   const addToCart = useCallback(
-    async (productId: number) => {
+    async () => {
       const data: postToCart = {
-        product_id: productId,
+        product_id: product.id,
         quantity: 1,
       };
 
       await dispatch(postItemToCart(data));
-      dispatch(getCart());
+      // dispatch(getCart());
     },
     [dispatch],
   );
 
   const removeFromCart = useCallback(
-    async (itemId: number) => {
-      await dispatch(deleteItemFromCart(itemId));
-      dispatch(getCart());
+    async () => {
+      await dispatch(deleteItemFromCart(product.id));
+      // dispatch(getCart());
     },
     [dispatch],
   );
+
+  
+
 
   return (
     <Card.Root
@@ -195,16 +187,18 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
               >
                 {product.title}
               </Card.Title>
-              {product.featured_product ? (
-                <FireIcon size='md' />
-              ) : null}
+              {product.featured_product ? <FireIcon size="md" /> : null}
             </HStack>
 
-              <HStack>
-
-            <RatingDisplay rating={product.rating} reviewCount={reviewCount} />
-            {product.rating >= 4 ? <Icon as={LuTrophy} color="blue.500" boxSize={4} /> : null}
-              </HStack>
+            <HStack>
+              <RatingDisplay
+                rating={product.rating}
+                reviewCount={reviewCount}
+              />
+              {product.rating >= 4 ? (
+                <Icon as={LuTrophy} color="blue.500" boxSize={4} />
+              ) : null}
+            </HStack>
 
             <Card.Description
               color="fg.muted"
@@ -242,14 +236,14 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
       </Link>
 
       <Card.Footer p={{ base: 4, md: 5 }} pt="0">
-        {cartItem ? (
+        {inCart ? (
           <Button
             variant="outline"
             w="full"
             colorPalette="red"
             rounded="lg"
             fontWeight="semibold"
-            onClick={() => removeFromCart(cartItem.id)}
+            onClick={() => removeFromCart()}
             aria-label={`Remove ${product.title} from cart`}
           >
             <Icon as={FaTrashAlt} />
@@ -263,7 +257,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
             disabled={product.inventory === 0}
             rounded="lg"
             fontWeight="semibold"
-            onClick={() => addToCart(product.id)}
+            onClick={() => addToCart()}
             aria-label={`Add ${product.title} to cart`}
           >
             <Icon as={FaShoppingCart} />
