@@ -18,6 +18,7 @@ export interface itemType {
     total_price: number
 }
 
+export type productIds = Record<number,true>
 
 export interface cartType {
     id:string,
@@ -27,6 +28,7 @@ export interface cartType {
 
 export interface cartInitial {
     cart : cartType | null,
+    productIDs : productIds,
     status: 'idle' | 'loading' | 'succeeded' | 'failed',
     error: string | null 
 }

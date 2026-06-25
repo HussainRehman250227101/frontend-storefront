@@ -13,8 +13,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import ProductCard from "../components/Home page/ProductCard";
-import { selectProducts } from "../features/Products/ProductSlice";
-import type { product } from "../features/Products/ProductInterfaces";
 import type { AppDispatch, RootState } from "../app/store";
 import ProductPageSkeleton from "../components/Home page/ProductPageSkeleton";
 import SidebarContent from "../components/Home page/SidebarContent";
@@ -22,14 +20,10 @@ import { fetchProducts } from "../features/Products/productThunk";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const products: product[] = useSelector(selectProducts);
-  const status = useSelector<RootState>((state: RootState) => state.products.status);
-  const error = useSelector((state: RootState) => state.products.error);
-  const productsCount = useSelector(
-    (state: RootState) => state.products.productsCount,
-  );
-  const next = useSelector((state: RootState) => state.products.next);
-  const previous = useSelector((state: RootState) => state.products.previous);
+
+  const {products,status,error,productsCount,next,previous} = useSelector((state: RootState) => state.products);
+
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const currentPage = useMemo(() => {

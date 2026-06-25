@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { deleteItemFromCart, getCart, postItemToCart, reduceItemQuantityInCart } from "./CartThunk";
-import type { cartInitial } from "./CartInterfaces";
+import type { cartInitial} from "./CartInterfaces";
 import type { RootState } from "../../app/store";
 import { toast } from "react-toastify";
 
 
 const initialState:cartInitial = {
     cart: null,
+    productIDs : {},
     status : 'idle',
     error : null 
 }
@@ -23,6 +24,8 @@ const cartSlice = createSlice({
         .addCase(getCart.fulfilled,(state,action)=>{
             state.cart = action.payload
             state.status = 'succeeded';
+            state.productIDs = {};
+            action.payload.items.forEach((item)=> state.productIDs[item.product.id]= true)
         })
         .addCase(getCart.rejected,(state,action)=>{
             state.status = 'failed';
