@@ -18,23 +18,24 @@ import {
 import { Star } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
-import type { product } from "../../features/Products/ProductInterfaces";
+import type { product } from "../features/Products/ProductInterfaces";
 import {
   deleteItemFromCart,
   getCart,
   postItemToCart,
-} from "../../features/Cart/CartThunk";
-import type { itemType, postToCart } from "../../features/Cart/CartInterfaces";
-import { selectCartItems } from "../../features/Cart/CartSlice";
+} from "../features/Cart/CartThunk";
+import type { itemType, postToCart } from "../features/Cart/CartInterfaces";
+import { selectCartItems } from "../features/Cart/CartSlice";
 import { useSelector, useDispatch } from "react-redux";
-import type { AppDispatch, RootState } from "../../app/store";
+import type { AppDispatch, RootState } from "../app/store";
 import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
-import { fetchProductReviews } from "../../features/Products/ProductRequests";
+import { fetchProductReviews } from "../features/Products/ProductRequests";
 import { toast } from "react-toastify";
-import type { Review } from "./ReviewCard";
-import ReviewCard from "./ReviewCard";
-import { selectProducts } from "../../features/Products/ProductSlice";
-
+import type { Review } from "../components/Product Details/ReviewCard";
+import ReviewCard from "../components/Product Details/ReviewCard";
+import { selectProducts } from "../features/Products/ProductSlice";
+import FireFlame from "../components/ui/FireFlame";
+import { LuTrophy } from "react-icons/lu";
 
 export default function ProductDetailPage() {
   
@@ -155,11 +156,17 @@ export default function ProductDetailPage() {
         <GridItem>
           <Stack gap={6} position="sticky" top="100px">
             <Stack gap={2}>
+              <HStack>
+
               <Heading size="2xl">{product.title}</Heading>
+              {product.featured_product ? <FireFlame size='sm' />: null }
+              
+              </HStack>
 
               <HStack>
                 <Icon as={Star} fill="gold" color="gold" />
                 <Text fontWeight="semibold">{product.rating.toFixed(1)}</Text>
+                {product.rating >= 4 ? <Icon as={LuTrophy} color="blue.500" boxSize={5} /> : null}
               </HStack>
             </Stack>
 

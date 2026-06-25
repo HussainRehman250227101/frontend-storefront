@@ -33,9 +33,9 @@ import { NavLink, useNavigate, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { LuExternalLink } from "react-icons/lu";
-import type { AppDispatch, RootState } from "../app/store";
-import { logout } from "../features/Auth/AuthSlice";
-import { ColorModeButton } from "./ui/color-mode";
+import type { AppDispatch, RootState } from "../../app/store";
+import { logout } from "../../features/Auth/AuthSlice";
+import { ColorModeButton } from "../ui/color-mode";
 
 type NavItem = {
   label: string;

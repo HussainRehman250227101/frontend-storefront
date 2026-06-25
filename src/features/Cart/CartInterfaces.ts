@@ -7,6 +7,8 @@ export interface productType {
     id:number,
     title:string,
     unit_price :string,
+    rating:number,
+    featured_product:boolean,
     images:image[]
 
 }

@@ -39,8 +39,15 @@ const cartSlice = createSlice({
         .addCase(postItemToCart.pending,(state)=>{
             state.status = 'loading'
         })
-        .addCase(postItemToCart.fulfilled,(state)=>{
+        .addCase(postItemToCart.fulfilled,(state,action)=>{
             state.status = 'succeeded';
+            const item = state.cart?.items.find(i=>i.id ===action.payload.id)
+            if (item) {
+                item.quantity +1
+            }else{
+
+                state.cart?.items.push(action.payload)
+            }
             toast.success('added to cart successfully!')
         })
         .addCase(postItemToCart.rejected,(state,action)=>{
@@ -55,8 +62,9 @@ const cartSlice = createSlice({
         .addCase(deleteItemFromCart.pending,(state)=>{
             state.status = 'loading'
         })
-        .addCase(deleteItemFromCart.fulfilled,(state)=>{
+        .addCase(deleteItemFromCart.fulfilled,(state,action)=>{
             state.status = 'succeeded';
+            state.cart && state.cart.items.filter((item)=>item.id !== action.meta.arg)
             toast.success('deleted from cart successfully!')
         })
         .addCase(deleteItemFromCart.rejected,(state,action)=>{
@@ -72,8 +80,11 @@ const cartSlice = createSlice({
             state.status = 'loading'
             
         })
-        .addCase(reduceItemQuantityInCart.fulfilled,(state)=>{
+        .addCase(reduceItemQuantityInCart.fulfilled,(state,action)=>{
             state.status = 'succeeded';
+            console.log(action.meta.arg);
+            
+            state.cart && state.cart.items.map((item)=>item.product.id === action.meta.arg.item_id ? item.quantity - 1 : item)
             toast.success('quantity reduced successfully!')
         })
         .addCase(reduceItemQuantityInCart.rejected,(state,action)=>{

@@ -12,9 +12,9 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import ProductCard from "../components/Home page/ProductCard";
+import ProductCard from "../components/Products Home/ProductCard";
 import type { AppDispatch, RootState } from "../app/store";
-import ProductPageSkeleton from "../components/Home page/ProductPageSkeleton";
+import ProductPageSkeleton from "../components/skeleton/ProductPageSkeleton";
 import SidebarContent from "../components/Home page/SidebarContent";
 import { fetchProducts } from "../features/Products/productThunk";
 

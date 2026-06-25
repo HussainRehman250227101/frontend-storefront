@@ -12,6 +12,7 @@ export interface product {
     price_with_tax:number,
     rating:number,
     inventory:number,
+    featured_product:boolean,
     collection:number,
     promotions:number[]
 }

@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react"
 import { Outlet } from "react-router"
-import Nav from "../components/Nav"
+import Nav from "../components/Nav/Nav"
 import { useEffect } from "react"
 import { store } from "../app/store"
 import { getCart } from "../features/Cart/CartThunk"

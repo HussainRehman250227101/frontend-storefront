@@ -6,7 +6,7 @@ import {
   SimpleGrid,
   SkeletonText,
 } from "@chakra-ui/react";
-import ProductCardSkeleton from "./ProductCardSkeleton";
+import ProductCardSkeleton from "../skeleton/ProductCardSkeleton";
 
 const ProductPageSkeleton = () => {
   const arr: number[] = [1, 2, 3, 4, 5, 6, 7, 8];

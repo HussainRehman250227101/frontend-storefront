@@ -5,8 +5,8 @@ import Cart from './pages/cart'
 import LoginPage from "./features/Auth/components/login";
 import SignupPage from "./features/Auth/components/signup";
 import ProfilePage from "./pages/ProfilePage";
-import ProductDetailPage from "./components/Products/ProductDetailPage";
-import NotFound from "./components/NotFound";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import NotFound from "./components/Home page/NotFound";
 
 
 export const router = createBrowserRouter(

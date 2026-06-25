@@ -12,7 +12,13 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 import { memo, useCallback, useMemo } from "react";
-import { FaRegStar, FaShoppingCart, FaStar, FaStarHalfAlt, FaTrashAlt } from "react-icons/fa";
+import {
+  FaRegStar,
+  FaShoppingCart,
+  FaStar,
+  FaStarHalfAlt,
+  FaTrashAlt,
+} from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "../../app/store";
@@ -26,6 +32,9 @@ import {
 } from "../../features/Cart/CartThunk";
 import type { product } from "../../features/Products/ProductInterfaces";
 import { Link } from "react-router";
+import FireIcon from "../ui/FIreIcon";
+import { LuTrophy } from "react-icons/lu";
+
 
 interface Props {
   product: product;
@@ -129,100 +138,107 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
         },
       }}
     >
-      <Link to={`/products/${product.id}`}  state={{product}}>
-      
-      <Box position="relative" overflow="hidden" bg="bg.subtle">
-        <AspectRatio ratio={4 / 3}>
-          <Image
-            data-product-image
-            src={imageSrc}
-            alt={`${product.title} product image`}
-            loading="lazy"
-            decoding="async"
-            objectFit="cover"
-            transition="transform 220ms ease"
-          />
-        </AspectRatio>
+      <Link to={`/products/${product.id}`} state={{ product }}>
+        <Box position="relative" overflow="hidden" bg="bg.subtle">
+          <AspectRatio ratio={4 / 3}>
+            <Image
+              data-product-image
+              src={imageSrc}
+              alt={`${product.title} product image`}
+              loading="lazy"
+              decoding="async"
+              objectFit="cover"
+              transition="transform 220ms ease"
+            />
+          </AspectRatio>
 
-        {product.inventory > 0 ? (
-          <Badge
-            position="absolute"
-            top="3"
-            left="3"
-            colorPalette="green"
-            variant="solid"
-            rounded="full"
-            px="2.5"
-            py="1"
-            shadow="sm"
-          >
-            In stock
-          </Badge>
-        ) : (
-          <Badge
-            position="absolute"
-            top="3"
-            left="3"
-            colorPalette="red"
-            variant="solid"
-            rounded="full"
-            px="2.5"
-            py="1"
-            shadow="sm"
-          >
-            Out of stock
-          </Badge>
-        )}
-      </Box>
-
-      <Card.Body gap="4" p={{ base: 4, md: 5 }}>
-        <Stack gap="2.5" flex="1">
-          <Card.Title
-            color="fg"
-            fontSize={{ base: "md", md: "lg" }}
-            fontWeight="semibold"
-            lineHeight="1.3"
-            lineClamp="2"
-          >
-            {product.title}
-          </Card.Title>
-
-          <RatingDisplay rating={product.rating} reviewCount={reviewCount} />
-
-          <Card.Description
-            color="fg.muted"
-            fontSize="sm"
-            lineHeight="1.6"
-            lineClamp="3"
-          >
-            {description}
-          </Card.Description>
-        </Stack>
-
-        <HStack align="end" justify="space-between" gap="3">
-          <Box>
-            <Text color="fg.muted" fontSize="xs" fontWeight="medium">
-              Price
-            </Text>
-            <Text
-              color="fg"
-              fontSize={{ base: "xl", md: "2xl" }}
-              fontWeight="bold"
-              letterSpacing="tight"
-              lineHeight="1.1"
+          {product.inventory > 0 ? (
+            <Badge
+              position="absolute"
+              top="3"
+              left="3"
+              colorPalette="green"
+              variant="solid"
+              rounded="full"
+              px="2.5"
+              py="1"
+              shadow="sm"
             >
-              {formattedPrice}
-            </Text>
-          </Box>
-
-          {product.promotions.length > 0 ? (
-            <Badge colorPalette="orange" variant="subtle" rounded="full">
-              Deal
+              In stock
             </Badge>
-          ) : null}
-        </HStack>
-      </Card.Body>
+          ) : (
+            <Badge
+              position="absolute"
+              top="3"
+              left="3"
+              colorPalette="red"
+              variant="solid"
+              rounded="full"
+              px="2.5"
+              py="1"
+              shadow="sm"
+            >
+              Out of stock
+            </Badge>
+          )}
+        </Box>
 
+        <Card.Body gap="4" p={{ base: 4, md: 5 }}>
+          <Stack gap="2.5" flex="1">
+            <HStack>
+              <Card.Title
+                color="fg"
+                fontSize={{ base: "md", md: "lg" }}
+                fontWeight="semibold"
+                lineHeight="1.3"
+                lineClamp="2"
+              >
+                {product.title}
+              </Card.Title>
+              {product.featured_product ? (
+                <FireIcon size='md' />
+              ) : null}
+            </HStack>
+
+              <HStack>
+
+            <RatingDisplay rating={product.rating} reviewCount={reviewCount} />
+            {product.rating >= 4 ? <Icon as={LuTrophy} color="blue.500" boxSize={4} /> : null}
+              </HStack>
+
+            <Card.Description
+              color="fg.muted"
+              fontSize="sm"
+              lineHeight="1.6"
+              lineClamp="3"
+            >
+              {description}
+            </Card.Description>
+          </Stack>
+
+          <HStack align="end" justify="space-between" gap="3">
+            <Box>
+              <Text color="fg.muted" fontSize="xs" fontWeight="medium">
+                Price
+              </Text>
+              <Text
+                color="fg"
+                fontSize={{ base: "xl", md: "2xl" }}
+                fontWeight="bold"
+                letterSpacing="tight"
+                lineHeight="1.1"
+              >
+                {formattedPrice}
+              </Text>
+            </Box>
+
+            {product.promotions.length > 0 ? (
+              <Badge colorPalette="orange" variant="subtle" rounded="full">
+                Deal
+              </Badge>
+            ) : null}
+          </HStack>
+        </Card.Body>
       </Link>
 
       <Card.Footer p={{ base: 4, md: 5 }} pt="0">
@@ -244,7 +260,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
             variant="solid"
             w="full"
             colorPalette="orange"
-            disabled={product.inventory===0}
+            disabled={product.inventory === 0}
             rounded="lg"
             fontWeight="semibold"
             onClick={() => addToCart(product.id)}
@@ -338,7 +354,9 @@ function getReviewCount(product: ProductWithReviewCount) {
     product.reviews_count ??
     product.reviewsCount;
 
-  return typeof count === "number" && Number.isFinite(count) ? count : undefined;
+  return typeof count === "number" && Number.isFinite(count)
+    ? count
+    : undefined;
 }
 
 function formatReviewCount(reviewCount: number) {

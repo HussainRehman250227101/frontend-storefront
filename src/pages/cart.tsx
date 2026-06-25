@@ -13,14 +13,22 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { Star } from "lucide-react";
 import { LuMinus, LuPlus, LuShieldCheck, LuX } from "react-icons/lu";
 import { useColorModeValue } from "../components/ui/color-mode";
 import { FaStripe } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartItems } from "../features/Cart/CartSlice";
 import type { AppDispatch } from "../app/store";
-import { deleteItemFromCart, getCart, postItemToCart, reduceItemQuantityInCart } from "../features/Cart/CartThunk";
+
+import {
+  deleteItemFromCart,
+  getCart,
+  postItemToCart,
+  reduceItemQuantityInCart,
+} from "../features/Cart/CartThunk";
 import type { itemType, postToCart } from "../features/Cart/CartInterfaces";
+import FireFlame from "../components/ui/FireFlame";
 
 const Cart = () => {
   const cartItems = useSelector(selectCartItems) || [];
@@ -33,10 +41,7 @@ const Cart = () => {
   const primary_text = useColorModeValue("black", "white");
   const quantityBorder = useColorModeValue("gray.300", "gray.600");
 
-  const subTotal = cartItems.reduce(
-    (acc, item) => acc + item.total_price,
-    0,
-  );
+  const subTotal = cartItems.reduce((acc, item) => acc + item.total_price, 0);
   const itemDispatch = useDispatch<AppDispatch>();
   const cartDispatch = useDispatch<AppDispatch>();
 
@@ -44,27 +49,26 @@ const Cart = () => {
     await itemDispatch(deleteItemFromCart(item_id));
     cartDispatch(getCart());
   };
-  
+
   const reduceitemfromthecart = async (item: itemType) => {
-    
-    const data:postToCart = {
-      product_id : item.product.id,
-      quantity :item.quantity - 1 
-    }
-    
+    const data: postToCart = {
+      product_id: item.product.id,
+      quantity: item.quantity - 1,
+    };
+
     const datatoThunk = {
-      item_id:item.id,
-      data : data
-    }
+      item_id: item.id,
+      data: data,
+    };
     await itemDispatch(reduceItemQuantityInCart(datatoThunk));
     cartDispatch(getCart());
   };
-  
+
   const additemtocart = async (item: itemType) => {
     const data = {
-      product_id : item.product.id,
-      quantity : 1
-    }
+      product_id: item.product.id,
+      quantity: 1,
+    };
     await itemDispatch(postItemToCart(data));
     cartDispatch(getCart());
   };
@@ -134,13 +138,19 @@ const Cart = () => {
                     />
 
                     <Box>
+                      <HStack>
+
                       <Text fontWeight="semibold" fontSize="lg">
                         {item.product.title}
                       </Text>
-
-                      <Text fontSize="sm" color={muted_text}>
-                        Product Code
-                      </Text>
+                      {item.product.featured_product ? <FireFlame size='sm' />:null}
+                      </HStack>
+                      <HStack>
+                        <Icon as={Star} fill="gold" color="gold"  size='md'/>
+                        <Text fontSize="sm" color={header_text}>
+                          ({item.product.rating})
+                        </Text>
+                      </HStack>
                     </Box>
                   </Flex>
 
@@ -157,7 +167,7 @@ const Cart = () => {
                         aria-label="Decrease quantity"
                         variant="ghost"
                         size="sm"
-                        onClick={()=> reduceitemfromthecart(item)}
+                        onClick={() => reduceitemfromthecart(item)}
                       >
                         <LuMinus />
                       </IconButton>
@@ -170,7 +180,7 @@ const Cart = () => {
                         aria-label="Increase quantity"
                         variant="ghost"
                         size="sm"
-                        onClick={()=> additemtocart(item)}
+                        onClick={() => additemtocart(item)}
                       >
                         <LuPlus />
                       </IconButton>
@@ -234,7 +244,7 @@ const Cart = () => {
             <Separator />
             <Flex justify="space-between">
               <Text color={muted_text}>Delivery</Text>
-              <Text >cash on delivery</Text>
+              <Text>cash on delivery</Text>
             </Flex>
             {/* <Box>
               <Text color={muted_text} mb={3}>
