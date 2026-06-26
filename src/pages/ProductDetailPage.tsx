@@ -112,6 +112,7 @@ export default function ProductDetailPage() {
               <Image
                 src={selectedImage}
                 alt={product.title}
+                loading="lazy"
                 w="100%"
                 h={{ base: "350px", md: "600px" }}
                 objectFit="cover"
@@ -135,6 +136,7 @@ export default function ProductDetailPage() {
                   <Image
                     src={img.image}
                     alt={product.title}
+                    loading="lazy"
                     w="80px"
                     h="80px"
                     objectFit="cover"

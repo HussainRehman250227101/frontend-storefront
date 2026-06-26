@@ -11,7 +11,7 @@ import {
   Text,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback } from "react";
 import {
   FaRegStar,
   FaShoppingCart,
@@ -48,37 +48,11 @@ type ProductWithReviewCount = product & {
 type StarState = "filled" | "half" | "empty";
 
 const MAX_RATING = 5;
-const DESCRIPTION_LIMIT = 110;
-
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 2,
-});
 
 const ProductCard = memo(function ProductCard({ product }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  
   const inCart = useSelector((state:RootState)=> state.cart.productIDs[product.id])
-
-  const imageSrc = useMemo(() => {
-    const apiImage = product.images?.[0]?.image?.trim();
-    return apiImage && apiImage.length > 0 ? apiImage : dummy;
-  }, [product.images]);
-
-  const description = useMemo(() => {
-    if (product.description.length <= DESCRIPTION_LIMIT) {
-      return product.description;
-    }
-
-    return `${product.description.slice(0, DESCRIPTION_LIMIT).trim()}...`;
-  }, [product.description]);
-
-  const formattedPrice = useMemo(
-    () => currencyFormatter.format(product.price_with_tax),
-    [product.price_with_tax],
-  );
-
+  const desc = product.description.length >= 110 ? product.description.slice(0,110) : product.description ;
   const reviewCount = getReviewCount(product);
 
   const addToCart = useCallback(
@@ -134,7 +108,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
           <AspectRatio ratio={4 / 3}>
             <Image
               data-product-image
-              src={imageSrc}
+              src={product.images[0].image ?? dummy}
               alt={`${product.title} product image`}
               loading="lazy"
               decoding="async"
@@ -205,7 +179,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
               lineHeight="1.6"
               lineClamp="3"
             >
-              {description}
+              {desc}
             </Card.Description>
           </Stack>
 
@@ -221,7 +195,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
                 letterSpacing="tight"
                 lineHeight="1.1"
               >
-                {formattedPrice}
+                ${product.unit_price}
               </Text>
             </Box>
 
@@ -357,4 +331,4 @@ function formatReviewCount(reviewCount: number) {
   return `${reviewCount.toLocaleString()} ${label}`;
 }
 
-export default ProductCard;
+export default memo(ProductCard);

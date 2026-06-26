@@ -1,12 +1,15 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
-import RootLayout from './layouts/RootLayout'
-import Home from "./pages/Home";
-import Cart from './pages/cart'
-import LoginPage from "./features/Auth/components/login";
-import SignupPage from "./features/Auth/components/signup";
-import ProfilePage from "./pages/ProfilePage";
-import ProductDetailPage from "./pages/ProductDetailPage";
-import NotFound from "./components/Home page/NotFound";
+import { lazy } from "react";
+
+const Home = lazy(() => import("./pages/Home"));
+const Cart = lazy(() => import("./pages/cart"));
+const LoginPage = lazy(() => import("./features/Auth/components/login"));
+const SignupPage = lazy(() => import("./features/Auth/components/signup"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const ProductDetailPage = lazy(() => import("./pages/ProductDetailPage"));
+const NotFound = lazy(() => import("./components/Home page/NotFound"));
+
+import RootLayout from "./layouts/RootLayout";
 
 
 export const router = createBrowserRouter(

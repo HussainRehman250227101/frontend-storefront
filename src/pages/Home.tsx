@@ -73,9 +73,6 @@ const Home = () => {
       setSearchParams({}, { replace: true });
       return;
     }
-
-    // if ()
-
     dispatch(
       fetchProducts({
         page: currentPage,
@@ -83,7 +80,7 @@ const Home = () => {
         search : searchQuery
       }),
     );
-  }, [currentPage, dispatch, searchParams, selectedCollection, setSearchParams]);
+  }, [currentPage, , searchParams, selectedCollection]);
 
   const updatePage = (page: number) => {
     const nextParams = new URLSearchParams(searchParams);

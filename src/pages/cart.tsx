@@ -19,17 +19,20 @@ import { useColorModeValue } from "../components/ui/color-mode";
 import { FaStripe } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartItems } from "../features/Cart/CartSlice";
-import type { AppDispatch } from "../app/store";
+import { type AppDispatch, type RootState } from "../app/store";
 
 import {
   deleteItemFromCart,
+  getCart,
   postItemToCart,
   reduceItemQuantityInCart,
 } from "../features/Cart/CartThunk";
 import type { itemType, postToCart } from "../features/Cart/CartInterfaces";
 import FireFlame from "../components/ui/FireFlame";
+import { useEffect } from "react";
 
 const Cart = () => {
+  const dispatch = useDispatch<AppDispatch>()
   const cartItems = useSelector(selectCartItems) || [];
   // COLOR MODE VALUES
   const pageBg = useColorModeValue("gray.50", "gray.900");
@@ -45,7 +48,6 @@ const Cart = () => {
 
   const removefromcart = async (product_id: number) => {
     await itemDispatch(deleteItemFromCart(product_id));
-    
   };
 
   const reduceitemfromthecart = async (item: itemType) => {
@@ -59,7 +61,6 @@ const Cart = () => {
       data: data,
     };
     await itemDispatch(reduceItemQuantityInCart(datatoThunk));
-    
   };
 
   const additemtocart = async (item: itemType) => {
@@ -68,8 +69,13 @@ const Cart = () => {
       quantity: 1,
     };
     await itemDispatch(postItemToCart(data));
-    
   };
+  const cart = useSelector((state: RootState) => state.cart.cart);
+
+  useEffect(() => {
+     if (cart) return;
+    dispatch(getCart());
+  }, [cart,dispatch]);
 
   return (
     <Box
@@ -133,18 +139,20 @@ const Cart = () => {
                       boxSize="90px"
                       objectFit="cover"
                       rounded="md"
+                      loading="lazy"
                     />
 
                     <Box>
                       <HStack>
-
-                      <Text fontWeight="semibold" fontSize="lg">
-                        {item.product.title}
-                      </Text>
-                      {item.product.featured_product ? <FireFlame size='sm' />:null}
+                        <Text fontWeight="semibold" fontSize="lg">
+                          {item.product.title}
+                        </Text>
+                        {item.product.featured_product ? (
+                          <FireFlame size="sm" />
+                        ) : null}
                       </HStack>
                       <HStack>
-                        <Icon as={Star} fill="gold" color="gold"  size='md'/>
+                        <Icon as={Star} fill="gold" color="gold" size="md" />
                         <Text fontSize="sm" color={header_text}>
                           ({item.product.rating})
                         </Text>
