@@ -89,7 +89,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
       };
 
       await dispatch(postItemToCart(data));
-      // dispatch(getCart());
+     
     },
     [dispatch],
   );
@@ -97,7 +97,6 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
   const removeFromCart = useCallback(
     async () => {
       await dispatch(deleteItemFromCart(product.id));
-      // dispatch(getCart());
     },
     [dispatch],
   );
@@ -130,7 +129,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
         },
       }}
     >
-      <Link to={`/products/${product.id}`} state={{ product }}>
+      <Link to={`/products/${product.id}`}>
         <Box position="relative" overflow="hidden" bg="bg.subtle">
           <AspectRatio ratio={4 / 3}>
             <Image

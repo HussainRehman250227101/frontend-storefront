@@ -16,49 +16,39 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { Star } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router";
-import type { product } from "../features/Products/ProductInterfaces";
-import {
-  deleteItemFromCart,
-  getCart,
-  postItemToCart,
-} from "../features/Cart/CartThunk";
-import type { itemType, postToCart } from "../features/Cart/CartInterfaces";
-import { selectCartItems } from "../features/Cart/CartSlice";
-import { useSelector, useDispatch } from "react-redux";
-import type { AppDispatch, RootState } from "../app/store";
-import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
-import { fetchProductReviews } from "../features/Products/ProductRequests";
-import { toast } from "react-toastify";
-import type { Review } from "../components/Product Details/ReviewCard";
-import ReviewCard from "../components/Product Details/ReviewCard";
-import { selectProducts } from "../features/Products/ProductSlice";
-import FireFlame from "../components/ui/FireFlame";
 import { LuTrophy } from "react-icons/lu";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useParams } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
+
+import { fetchProductReviews } from "../features/Products/ProductRequests";
+import ReviewCard from "../components/Product Details/ReviewCard";
+import NotFound from "../components/Home page/NotFound";
+import FireFlame from "../components/ui/FireFlame";
+import { deleteItemFromCart, postItemToCart } from "../features/Cart/CartThunk";
+import type { AppDispatch, RootState } from "../app/store";
+import type { Review } from "../components/Product Details/ReviewCard";
+import type { postToCart } from "../features/Cart/CartInterfaces";
 
 export default function ProductDetailPage() {
-  
-  const {id} = useParams()
-  const dispatch = useDispatch<AppDispatch>();
+  const { id } = useParams();
 
-  const cartItems = useSelector<RootState, itemType[] | undefined>(
-    selectCartItems,
+  const product = useSelector((state: RootState) =>
+    state.products.products.find((prod) => prod.id === Number(id)),
   );
-  const products = useSelector(selectProducts);
+  const inCart = useSelector((state:RootState)=> state.cart.productIDs[Number(id)])
 
-  const product:product = products.filter((p)=> p.id===Number(id))[0]
+  if (!product) {
+    return <NotFound />;
+  }
+
   
+
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.image);
   const [quantity, setQuantity] = useState(1);
-
-  const cartItem = useMemo(
-    () =>
-      Array.isArray(cartItems)
-        ? cartItems.find((item) => item.product.id === product.id)
-        : undefined,
-    [cartItems, product.id],
-  );
 
   const addToCart = useCallback(
     async (productId: number) => {
@@ -66,9 +56,7 @@ export default function ProductDetailPage() {
         product_id: productId,
         quantity,
       };
-
       await dispatch(postItemToCart(data));
-      dispatch(getCart());
     },
     [dispatch, quantity],
   );
@@ -76,12 +64,12 @@ export default function ProductDetailPage() {
   const removeFromCart = useCallback(
     async (itemId: number) => {
       await dispatch(deleteItemFromCart(itemId));
-      dispatch(getCart());
     },
     [dispatch],
   );
 
   const [reviews, setReviews] = useState<Review[]>([]);
+
   useEffect(() => {
     const loadReviews = async () => {
       try {
@@ -97,8 +85,13 @@ export default function ProductDetailPage() {
     loadReviews();
   }, [product.id]);
 
+
+
+
+
+
+
   return (
-    
     <Box maxW="1400px" mx="auto" px={6} py={10}>
       <Grid
         templateColumns={{
@@ -157,16 +150,16 @@ export default function ProductDetailPage() {
           <Stack gap={6} position="sticky" top="100px">
             <Stack gap={2}>
               <HStack>
-
-              <Heading size="2xl">{product.title}</Heading>
-              {product.featured_product ? <FireFlame size='sm' />: null }
-              
+                <Heading size="2xl">{product.title}</Heading>
+                {product.featured_product ? <FireFlame size="sm" /> : null}
               </HStack>
 
               <HStack>
                 <Icon as={Star} fill="gold" color="gold" />
                 <Text fontWeight="semibold">{product.rating.toFixed(1)}</Text>
-                {product.rating >= 4 ? <Icon as={LuTrophy} color="blue.500" boxSize={5} /> : null}
+                {product.rating >= 4 ? (
+                  <Icon as={LuTrophy} color="blue.500" boxSize={5} />
+                ) : null}
               </HStack>
             </Stack>
 
@@ -240,14 +233,14 @@ export default function ProductDetailPage() {
             >
               Add To Cart
             </Button> */}
-            {cartItem ? (
+            {inCart ? (
               <Button
                 variant="outline"
                 w="full"
                 colorPalette="red"
                 rounded="lg"
                 fontWeight="semibold"
-                onClick={() => removeFromCart(cartItem.id)}
+                onClick={() => removeFromCart(product.id)}
                 aria-label={`Remove ${product.title} from cart`}
               >
                 <Icon as={FaTrashAlt} />

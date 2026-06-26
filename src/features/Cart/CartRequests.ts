@@ -1,6 +1,6 @@
 
 import api from '../../api/axios'
-import type { itemType, postToCart } from './CartInterfaces'
+import type { postToCart } from './CartInterfaces'
 
 
 
@@ -15,7 +15,7 @@ export const fetchCart = async (cart_id:string)=> {
     return response.data
 };
 
-export const addToCart = async (cart_id:string,data:postToCart):Promise<itemType> => {
+export const addToCart = async (cart_id:string,data:postToCart) => {
     const response  = await api.post(`/store/cart/${cart_id}/items/`, data)
     
     return response.data

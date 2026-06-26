@@ -23,7 +23,6 @@ import type { AppDispatch } from "../app/store";
 
 import {
   deleteItemFromCart,
-  getCart,
   postItemToCart,
   reduceItemQuantityInCart,
 } from "../features/Cart/CartThunk";
@@ -43,11 +42,10 @@ const Cart = () => {
 
   const subTotal = cartItems.reduce((acc, item) => acc + item.total_price, 0);
   const itemDispatch = useDispatch<AppDispatch>();
-  const cartDispatch = useDispatch<AppDispatch>();
 
   const removefromcart = async (product_id: number) => {
     await itemDispatch(deleteItemFromCart(product_id));
-    cartDispatch(getCart());
+    
   };
 
   const reduceitemfromthecart = async (item: itemType) => {
@@ -61,7 +59,7 @@ const Cart = () => {
       data: data,
     };
     await itemDispatch(reduceItemQuantityInCart(datatoThunk));
-    cartDispatch(getCart());
+    
   };
 
   const additemtocart = async (item: itemType) => {
@@ -70,7 +68,7 @@ const Cart = () => {
       quantity: 1,
     };
     await itemDispatch(postItemToCart(data));
-    cartDispatch(getCart());
+    
   };
 
   return (
