@@ -38,13 +38,13 @@ export default function ProductDetailPage() {
   const product = useSelector((state: RootState) =>
     state.products.products.find((prod) => prod.id === Number(id)),
   );
-  const inCart = useSelector((state:RootState)=> state.cart.productIDs[Number(id)])
+  const inCart = useSelector(
+    (state: RootState) => state.cart.productIDs[Number(id)],
+  );
 
   if (!product) {
     return <NotFound />;
   }
-
-  
 
   const dispatch = useDispatch<AppDispatch>();
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.image);
@@ -85,11 +85,9 @@ export default function ProductDetailPage() {
     loadReviews();
   }, [product.id]);
 
-
-
-
-
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Box maxW="1400px" mx="auto" px={6} py={10}>
