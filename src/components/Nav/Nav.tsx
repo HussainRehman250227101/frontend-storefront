@@ -67,7 +67,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "APIs",
-    to: "https://api.hussaindev.tech/store/",
+    to: "https://apis.hussaindev.tech/store/",
     external: true,
   },
 ];
