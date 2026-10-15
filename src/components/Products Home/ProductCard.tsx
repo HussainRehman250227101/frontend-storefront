@@ -52,7 +52,10 @@ const MAX_RATING = 5;
 const ProductCard = memo(function ProductCard({ product }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const inCart = useSelector((state:RootState)=> state.cart.productIDs[product.id])
-  const desc = product.description.length >= 110 ? product.description.slice(0,110) : product.description ;
+  const desc = (product.description ?? "").length >= 110
+    ? (product.description ?? "").slice(0, 110)
+    : (product.description ?? "");
+  const productImage = product.images?.[0]?.image || dummy;
   const reviewCount = getReviewCount(product);
 
   const addToCart = useCallback(
@@ -108,7 +111,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
           <AspectRatio ratio={4 / 3}>
             <Image
               data-product-image
-              src={product.images[0].image ?? dummy}
+              src={productImage}
               alt={`${product.title} product image`}
               loading="lazy"
               decoding="async"
@@ -199,7 +202,7 @@ const ProductCard = memo(function ProductCard({ product }: Props) {
               </Text>
             </Box>
 
-            {product.promotions.length > 0 ? (
+            {(product.promotions?.length ?? 0) > 0 ? (
               <Badge colorPalette="orange" variant="subtle" rounded="full">
                 Deal
               </Badge>
