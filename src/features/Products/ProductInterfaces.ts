@@ -36,6 +36,28 @@ export interface FetchProductsParams {
     search?:string
 }
 
+export interface RecommendationResult {
+    similarity: number | null,
+    reasons: string[],
+    matched_terms: string[],
+    anchor_product_id: number | null,
+    anchor_title: string | null,
+    product: product
+}
+
+export interface RecommendationRequest {
+    cartIds?: number[]
+    visitedIds?: number[]
+    search?: string
+}
+
+export interface RecommendationResponse {
+    strategy: "content_based" | "cold_start",
+    summary: string,
+    seed_product_ids: number[],
+    results: RecommendationResult[]
+}
+
 export interface productInitialState {
     products : product[],
     productsCount:number,

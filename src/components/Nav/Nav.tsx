@@ -36,6 +36,7 @@ import { LuExternalLink } from "react-icons/lu";
 import type { AppDispatch, RootState } from "../../app/store";
 import { logout } from "../../features/Auth/AuthSlice";
 import { ColorModeButton } from "../ui/color-mode";
+import { recordSearch } from "../../features/Products/shopperSignals";
 
 type NavItem = {
   label: string;
@@ -67,7 +68,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "APIs",
-    to: "https://apis.hussaindev.tech/store/",
+    to: "https://api.hussaindev.tech/store/",
     external: true,
   },
 ];
@@ -291,6 +292,7 @@ function SearchField() {
      const nextParams = new URLSearchParams(searchParams);
 
      if (searchValue){
+      recordSearch(searchValue)
       nextParams.set('search',String(searchValue))
     }else{
       nextParams.delete('search')

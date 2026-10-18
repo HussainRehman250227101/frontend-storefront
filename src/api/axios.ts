@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const api = axios.create({
-    baseURL:'https://apis.hussaindev.tech'
+    baseURL:'https://apis.hussaindev.tech'//'http://127.0.0.1:8000'//
 })
 // http://localhost:8000
 // https://api.hussaindev.tech

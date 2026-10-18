@@ -23,7 +23,10 @@ import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
 
-import { fetchProductReviews } from "../features/Products/ProductRequests";
+import { fetchProductReviews, fetchSimilarProducts } from "../features/Products/ProductRequests";
+import type { RecommendationResult } from "../features/Products/ProductInterfaces";
+import RecommendationRow from "../components/Products Home/RecommendationRow";
+import { recordProductVisit } from "../features/Products/shopperSignals";
 import ReviewCard from "../components/Product Details/ReviewCard";
 import NotFound from "../components/Home page/NotFound";
 import FireFlame from "../components/ui/FireFlame";
@@ -69,6 +72,8 @@ export default function ProductDetailPage() {
   );
 
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [similar, setSimilar] = useState<RecommendationResult[]>([]);
+  const [similarSummary, setSimilarSummary] = useState("");
 
   useEffect(() => {
     const loadReviews = async () => {
@@ -83,6 +88,31 @@ export default function ProductDetailPage() {
     };
 
     loadReviews();
+  }, [product.id]);
+
+  useEffect(() => {
+    recordProductVisit(product.id);
+    let cancelled = false;
+
+    const loadSimilar = async () => {
+      try {
+        const response = await fetchSimilarProducts(product.id);
+        if (cancelled) {
+          return;
+        }
+        setSimilar(response.results);
+        setSimilarSummary(response.summary);
+      } catch {
+        if (!cancelled) {
+          setSimilar([]);
+        }
+      }
+    };
+
+    loadSimilar();
+    return () => {
+      cancelled = true;
+    };
   }, [product.id]);
 
   useEffect(() => {
@@ -299,6 +329,12 @@ export default function ProductDetailPage() {
           )}
         </Stack>
       </Box>
+
+      <RecommendationRow
+        title="Similar products"
+        summary={similarSummary}
+        results={similar}
+      />
     </Box>
   );
 }

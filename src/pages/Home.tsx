@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -17,11 +17,17 @@ import type { AppDispatch, RootState } from "../app/store";
 import ProductPageSkeleton from "../components/skeleton/ProductPageSkeleton";
 import SidebarContent from "../components/Home page/SidebarContent";
 import { fetchProducts } from "../features/Products/productThunk";
+import { fetchRecommendedProducts } from "../features/Products/ProductRequests";
+import { getRecentSearches, getVisitedProductIds } from "../features/Products/shopperSignals";
+import type { RecommendationResponse } from "../features/Products/ProductInterfaces";
+import RecommendationRow from "../components/Products Home/RecommendationRow";
 
 const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const {products,status,error,productsCount,next,previous} = useSelector((state: RootState) => state.products);
+  const cartItems = useSelector((state: RootState) => state.cart.cart?.items);
+  const [recommendations, setRecommendations] = useState<RecommendationResponse | null>(null);
 
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -68,6 +74,47 @@ const Home = () => {
     return Math.max(1, Math.ceil(productsCount / pageSize));
   }, [productsCount, pageSize]);
 
+  const cartProductIds = useMemo(() => {
+    const ids = cartItems?.map((item) => item.product.id) ?? [];
+    return [...new Set(ids)];
+  }, [cartItems]);
+
+  useEffect(() => {
+    const hasSession = Boolean(localStorage.getItem("access"));
+    const visitedIds = getVisitedProductIds();
+    const searches = getRecentSearches();
+    if (searchQuery && !searches.some((item) => item.toLowerCase() === searchQuery.toLowerCase())) {
+      searches.unshift(searchQuery);
+    }
+    if (!hasSession && cartProductIds.length === 0 && visitedIds.length === 0 && searches.length === 0) {
+      setRecommendations(null);
+      return;
+    }
+
+    let cancelled = false;
+    const loadRecommendations = async () => {
+      try {
+        const response = await fetchRecommendedProducts({
+          cartIds: cartProductIds,
+          visitedIds,
+          search: searches.join(" "),
+        });
+        if (!cancelled) {
+          setRecommendations(response);
+        }
+      } catch {
+        if (!cancelled) {
+          setRecommendations(null);
+        }
+      }
+    };
+
+    loadRecommendations();
+    return () => {
+      cancelled = true;
+    };
+  }, [cartProductIds, searchQuery]);
+
   useEffect(() => {
     if (currentPage === 1 && searchParams.has("page") && !searchParams.has("collection")) {
       setSearchParams({}, { replace: true });
@@ -113,6 +160,18 @@ const Home = () => {
             </GridItem>
 
             <GridItem>
+              {recommendations?.results.length ? (
+                <RecommendationRow
+                  title={
+                    recommendations.strategy === "content_based"
+                      ? "Recommended for you"
+                      : "Popular right now"
+                  }
+                  summary={recommendations.summary}
+                  results={recommendations.results}
+                />
+              ) : null}
+
               <SimpleGrid
                 columns={{
                   base: 1,
