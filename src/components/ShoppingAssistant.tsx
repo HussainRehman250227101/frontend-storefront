@@ -123,15 +123,15 @@ export default function ShoppingAssistant() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans text-[#182230] max-[520px]:pointer-events-none max-[520px]:inset-0 max-[520px]:bottom-auto max-[520px]:right-auto">
+    <div className="pointer-events-none fixed inset-0 z-[9999] font-sans text-[#182230]">
       {isOpen && (
         <section
-          className="absolute bottom-[84px] right-0 flex h-[min(650px,calc(100dvh_-_128px))] min-h-[420px] w-[min(390px,calc(100vw_-_32px))] flex-col overflow-hidden rounded-[25px] border border-[#e1e6ef]/90 bg-white shadow-[0_28px_90px_rgba(28,33,68,0.20),0_5px_18px_rgba(28,33,68,0.07)] transition duration-200 max-[520px]:pointer-events-auto max-[520px]:fixed max-[520px]:inset-0 max-[520px]:h-[100dvh] max-[520px]:min-h-0 max-[520px]:w-full max-[520px]:max-w-none max-[520px]:rounded-none max-[520px]:border-0"
+          className="pointer-events-auto fixed inset-0 flex h-[100dvh] min-h-0 w-screen max-w-none flex-col overflow-hidden rounded-none border-0 border-[#e1e6ef]/90 bg-white shadow-[0_24px_72px_rgba(28,33,68,0.20),0_5px_18px_rgba(28,33,68,0.07)] transition duration-200 sm:inset-auto sm:bottom-[104px] sm:right-6 sm:h-[min(640px,calc(100dvh_-_128px))] sm:w-[min(400px,calc(100vw_-_32px))] sm:max-w-[400px] sm:rounded-[24px] sm:border"
           role="dialog"
           aria-modal="false"
           aria-label="Shopping assistant chat"
         >
-          <header className="flex shrink-0 items-center gap-[11px] bg-gradient-to-r from-[#30277f] via-[#5142de] to-[#7866f3] px-[17px] py-[17px] text-white max-[520px]:min-h-[calc(75px_+_env(safe-area-inset-top))] max-[520px]:px-4 max-[520px]:pt-[max(16px,env(safe-area-inset-top))]">
+          <header className="flex shrink-0 items-center gap-[11px] bg-gradient-to-r from-[#30277f] via-[#5142de] to-[#7866f3] px-[17px] py-[17px] text-white max-[639px]:min-h-[calc(75px_+_env(safe-area-inset-top))] max-[639px]:px-4 max-[639px]:pt-[max(16px,env(safe-area-inset-top))]">
             <div
               className="relative grid h-[43px] w-[43px] shrink-0 place-items-center rounded-[15px] border border-white/25 bg-gradient-to-br from-white/25 to-white/10 shadow-inner"
               aria-hidden="true"
@@ -152,7 +152,7 @@ export default function ShoppingAssistant() {
               </p>
             </div>
             <button
-              className="grid h-[31px] w-[31px] shrink-0 place-items-center rounded-[10px] border-0 bg-white/10 text-white/90 transition hover:-translate-y-px hover:bg-white/20 max-[520px]:h-[34px] max-[520px]:w-[34px]"
+              className="grid h-[31px] w-[31px] shrink-0 place-items-center rounded-[10px] border-0 bg-white/10 text-white/90 transition hover:-translate-y-px hover:bg-white/20 max-[639px]:hidden"
               onClick={() => setIsOpen(false)}
               aria-label="Minimize chat"
               type="button"
@@ -160,7 +160,7 @@ export default function ShoppingAssistant() {
               <ChevronDown size={21} />
             </button>
             <button
-              className="hidden h-[34px] w-[34px] shrink-0 place-items-center rounded-[10px] border-0 bg-white/10 text-white/90 transition hover:bg-white/20 max-[520px]:grid"
+              className="hidden h-[34px] w-[34px] shrink-0 place-items-center rounded-[10px] border-0 bg-white/10 text-white/90 transition hover:bg-white/20 max-[639px]:grid"
               onClick={() => setIsOpen(false)}
               aria-label="Close chat"
               type="button"
@@ -169,17 +169,17 @@ export default function ShoppingAssistant() {
             </button>
           </header>
 
-          <div className="flex shrink-0 items-center gap-[9px] border-b border-[#edf0f6] bg-[#fafbff] px-[18px] py-[9px] text-[10px] font-semibold text-[#6e7787] max-[520px]:px-4 max-[520px]:py-[10px]">
+          <div className="flex shrink-0 items-center gap-[9px] border-b border-[#edf0f6] bg-[#fafbff] px-[18px] py-[9px] text-[10px] font-semibold text-[#6e7787] max-[639px]:gap-2 max-[639px]:px-4 max-[639px]:py-[10px]">
             <span className="flex items-center gap-[5px] whitespace-nowrap text-[#6557dc]">
               <Bot size={14} />
               Personal shopping assistant
             </span>
             <span className="h-[13px] w-px shrink-0 bg-[#dce1eb]" />
-            <span className="whitespace-nowrap">Product picks, made easy</span>
+            <span className="min-w-0 truncate">Product picks, made easy</span>
           </div>
 
           <div
-            className="flex-1 overflow-y-auto overscroll-contain bg-gradient-to-b from-white to-[#fcfcff] px-[15px] pb-[14px] pt-[18px] [scrollbar-color:#e4e7ef_transparent] [scrollbar-width:thin] max-[520px]:px-4 max-[520px]:pb-[15px] max-[520px]:pt-[19px]"
+            className="flex-1 overflow-y-auto overscroll-contain bg-gradient-to-b from-white to-[#fcfcff] px-[15px] pb-[14px] pt-[18px] [scrollbar-color:#e4e7ef_transparent] [scrollbar-width:thin] max-[639px]:px-4 max-[639px]:pb-[15px] max-[639px]:pt-[19px]"
             ref={feedRef}
             aria-live="polite"
           >
@@ -205,8 +205,8 @@ export default function ShoppingAssistant() {
                   <div
                     className={
                       message.role === "user"
-                        ? "[overflow-wrap:anywhere] rounded-[15px] rounded-tr-[5px] bg-gradient-to-br from-[#6656ec] to-[#5142df] px-[13px] py-[11px] text-[12px] leading-[1.65] text-white shadow-[0_4px_10px_rgba(87,72,222,0.14)] max-[520px]:text-[13px]"
-                        : "[overflow-wrap:anywhere] rounded-[5px] rounded-tr-[15px] rounded-br-[15px] rounded-bl-[15px] border border-[#eff0f6] bg-[#f4f5fa] px-[13px] py-[11px] text-[12px] leading-[1.65] text-[#4d5969] max-[520px]:text-[13px]"
+                        ? "[overflow-wrap:anywhere] rounded-[15px] rounded-tr-[5px] bg-gradient-to-br from-[#6656ec] to-[#5142df] px-[13px] py-[11px] text-[12px] leading-[1.65] text-white shadow-[0_4px_10px_rgba(87,72,222,0.14)] max-[639px]:text-[13px]"
+                        : "[overflow-wrap:anywhere] rounded-[5px] rounded-tr-[15px] rounded-br-[15px] rounded-bl-[15px] border border-[#eff0f6] bg-[#f4f5fa] px-[13px] py-[11px] text-[12px] leading-[1.65] text-[#4d5969] max-[639px]:text-[13px]"
                     }
                   >
                     {message.content}
@@ -269,7 +269,7 @@ export default function ShoppingAssistant() {
                 {suggestions.map(({ icon: Icon, label }) => (
                   <button
                     key={label}
-                    className="mb-[7px] flex w-full items-center gap-[9px] rounded-xl border border-[#e9eaf5] bg-white px-[11px] py-[10px] text-left text-[11px] font-semibold text-[#596575] transition hover:translate-x-[2px] hover:border-[#c9c3ff] hover:bg-[#faf9ff] hover:shadow-[0_4px_12px_rgba(63,57,139,0.05)] max-[520px]:px-3 max-[520px]:py-3 max-[520px]:text-xs"
+                    className="mb-[7px] flex w-full items-center gap-[9px] rounded-xl border border-[#e9eaf5] bg-white px-[11px] py-[10px] text-left text-[11px] font-semibold text-[#596575] transition hover:translate-x-[2px] hover:border-[#c9c3ff] hover:bg-[#faf9ff] hover:shadow-[0_4px_12px_rgba(63,57,139,0.05)] max-[639px]:px-3 max-[639px]:py-3 max-[639px]:text-xs"
                     onClick={() => sendMessage(label)}
                     type="button"
                   >
@@ -300,14 +300,14 @@ export default function ShoppingAssistant() {
             )}
           </div>
 
-          <div className="shrink-0 border-t border-[#edf0f5] bg-white px-[14px] pb-[11px] pt-3 max-[520px]:px-[15px] max-[520px]:pb-[max(12px,env(safe-area-inset-bottom))]">
+          <div className="shrink-0 border-t border-[#edf0f5] bg-white px-[14px] pb-[11px] pt-3 max-[639px]:px-[15px] max-[639px]:pb-[max(12px,env(safe-area-inset-bottom))]">
             <form
               className="flex items-center gap-2 rounded-[15px] border border-[#e4e7f0] bg-[#fbfbfe] p-[5px] pl-[14px] transition focus-within:border-[#bab2ff] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(94,77,226,0.08)]"
               onSubmit={handleSubmit}
             >
               <input
                 ref={inputRef}
-                className="h-[35px] min-w-0 flex-1 border-0 bg-transparent p-0 text-xs text-[#263244] outline-none placeholder:text-[#a2a9b6] max-[520px]:text-base"
+                className="h-[35px] min-w-0 flex-1 border-0 bg-transparent p-0 text-xs text-[#263244] outline-none placeholder:text-[#a2a9b6] max-[639px]:text-base"
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 placeholder="Ask me to find something..."
@@ -332,17 +332,17 @@ export default function ShoppingAssistant() {
       )}
 
       {!isOpen && (
-        <div className="group/launcher pointer-events-auto relative flex justify-end max-[520px]:absolute max-[520px]:bottom-[max(18px,env(safe-area-inset-bottom))] max-[520px]:right-[max(18px,env(safe-area-inset-right))]">
-          <div className="pointer-events-none absolute right-[74px] top-1/2 -translate-y-1/2 translate-x-[5px] whitespace-nowrap rounded-[10px] bg-[#272345] px-3 py-[9px] text-[11px] font-semibold text-white opacity-0 shadow-[0_7px_20px_rgba(30,24,74,0.16)] transition group-hover/launcher:translate-x-0 group-hover/launcher:opacity-100">
+        <div className="group/launcher pointer-events-auto absolute bottom-[max(18px,env(safe-area-inset-bottom))] right-[max(18px,env(safe-area-inset-right))] flex justify-end sm:bottom-6 sm:right-6">
+          <div className="pointer-events-none absolute right-[74px] top-1/2 -translate-y-1/2 translate-x-[5px] whitespace-nowrap rounded-[10px] bg-[#272345] px-3 py-[9px] text-[11px] font-semibold text-white opacity-0 shadow-[0_7px_20px_rgba(30,24,74,0.16)] transition group-hover/launcher:translate-x-0 group-hover/launcher:opacity-100 max-[639px]:hidden">
             Need a hand choosing?
           </div>
           <button
-            className="group relative isolate grid h-[62px] w-[62px] place-items-center rounded-[22px] border-0 bg-gradient-to-br from-[#7868fa] via-[#5c4be8] to-[#4332cd] text-white shadow-[0_14px_32px_rgba(82,63,218,0.34),inset_0_1px_0_rgba(255,255,255,0.36)] transition hover:-translate-y-[3px] hover:-rotate-2 hover:shadow-[0_19px_37px_rgba(82,63,218,0.4)] active:scale-95 max-[520px]:h-[59px] max-[520px]:w-[59px] max-[520px]:rounded-[21px]"
+            className="group relative isolate grid h-[62px] w-[62px] place-items-center rounded-[22px] border-0 bg-gradient-to-br from-[#7868fa] via-[#5c4be8] to-[#4332cd] text-white shadow-[0_14px_32px_rgba(82,63,218,0.34),inset_0_1px_0_rgba(255,255,255,0.36)] transition hover:-translate-y-[3px] hover:-rotate-2 hover:shadow-[0_19px_37px_rgba(82,63,218,0.4)] active:scale-95 max-[639px]:h-[59px] max-[639px]:w-[59px] max-[639px]:rounded-[21px]"
             onClick={() => setIsOpen(true)}
             aria-label="Open shopping assistant"
             type="button"
           >
-            <span className="pointer-events-none absolute inset-[1px] rounded-[21px] border border-white/25 max-[520px]:rounded-[20px]" />
+            <span className="pointer-events-none absolute inset-[1px] rounded-[21px] border border-white/25 max-[639px]:rounded-[20px]" />
             <span className="pointer-events-none absolute -inset-[6px] -z-10 rounded-[27px] bg-[#8072ff] opacity-[0.13] blur-[9px]" />
             <MessageCircle
               className="drop-shadow-[0_2px_3px_rgba(34,24,109,0.2)]"
