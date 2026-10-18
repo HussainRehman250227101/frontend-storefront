@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Bot, ChevronDown, MessageCircle, Send, Sparkles, X, Star, ArrowUpRight, ShoppingBag, Zap } from "lucide-react";
+import "./ShoppingAssistant.css";
 
 type Product = {
   id: string;
