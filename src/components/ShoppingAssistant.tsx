@@ -126,12 +126,12 @@ export default function ShoppingAssistant() {
     <div className="fixed bottom-6 right-6 z-[9999] font-sans text-[#182230] max-[520px]:pointer-events-none max-[520px]:inset-0 max-[520px]:bottom-auto max-[520px]:right-auto">
       {isOpen && (
         <section
-          className="absolute bottom-[84px] right-0 flex h-[min(650px,calc(100dvh-128px))] min-h-[420px] w-[min(390px,calc(100vw-32px))] flex-col overflow-hidden rounded-[25px] border border-[#e1e6ef]/90 bg-white shadow-[0_28px_90px_rgba(28,33,68,0.20),0_5px_18px_rgba(28,33,68,0.07)] transition duration-200 max-[520px]:pointer-events-auto max-[520px]:fixed max-[520px]:inset-0 max-[520px]:h-[100dvh] max-[520px]:min-h-0 max-[520px]:w-full max-[520px]:max-w-none max-[520px]:rounded-none max-[520px]:border-0"
+          className="absolute bottom-[84px] right-0 flex h-[min(650px,calc(100dvh_-_128px))] min-h-[420px] w-[min(390px,calc(100vw_-_32px))] flex-col overflow-hidden rounded-[25px] border border-[#e1e6ef]/90 bg-white shadow-[0_28px_90px_rgba(28,33,68,0.20),0_5px_18px_rgba(28,33,68,0.07)] transition duration-200 max-[520px]:pointer-events-auto max-[520px]:fixed max-[520px]:inset-0 max-[520px]:h-[100dvh] max-[520px]:min-h-0 max-[520px]:w-full max-[520px]:max-w-none max-[520px]:rounded-none max-[520px]:border-0"
           role="dialog"
           aria-modal="false"
           aria-label="Shopping assistant chat"
         >
-          <header className="flex shrink-0 items-center gap-[11px] bg-gradient-to-r from-[#30277f] via-[#5142de] to-[#7866f3] px-[17px] py-[17px] text-white max-[520px]:min-h-[calc(75px+env(safe-area-inset-top))] max-[520px]:px-4 max-[520px]:pt-[max(16px,env(safe-area-inset-top))]">
+          <header className="flex shrink-0 items-center gap-[11px] bg-gradient-to-r from-[#30277f] via-[#5142de] to-[#7866f3] px-[17px] py-[17px] text-white max-[520px]:min-h-[calc(75px_+_env(safe-area-inset-top))] max-[520px]:px-4 max-[520px]:pt-[max(16px,env(safe-area-inset-top))]">
             <div
               className="relative grid h-[43px] w-[43px] shrink-0 place-items-center rounded-[15px] border border-white/25 bg-gradient-to-br from-white/25 to-white/10 shadow-inner"
               aria-hidden="true"
@@ -183,8 +183,10 @@ export default function ShoppingAssistant() {
             ref={feedRef}
             aria-live="polite"
           >
-            <div className="mb-5 flex items-center gap-[9px] text-[9px] font-extrabold tracking-[1.2px] text-[#a3aab7] before:h-px before:flex-1 before:bg-[#edf0f5] after:h-px after:flex-1 after:bg-[#edf0f5]">
+            <div className="mb-5 flex items-center gap-[9px] text-[9px] font-extrabold tracking-[1.2px] text-[#a3aab7]">
+              <span className="h-px flex-1 bg-[#edf0f5]" />
               <span>YOUR SHOPPING SESSION</span>
+              <span className="h-px flex-1 bg-[#edf0f5]" />
             </div>
             {messages.map((message) => (
               <div
@@ -203,8 +205,8 @@ export default function ShoppingAssistant() {
                   <div
                     className={
                       message.role === "user"
-                        ? "overflow-wrap-anywhere rounded-[15px] rounded-tr-[5px] bg-gradient-to-br from-[#6656ec] to-[#5142df] px-[13px] py-[11px] text-[12px] leading-[1.65] text-white shadow-[0_4px_10px_rgba(87,72,222,0.14)] max-[520px]:text-[13px]"
-                        : "overflow-wrap-anywhere rounded-[5px] rounded-tr-[15px] rounded-br-[15px] rounded-bl-[15px] border border-[#eff0f6] bg-[#f4f5fa] px-[13px] py-[11px] text-[12px] leading-[1.65] text-[#4d5969] max-[520px]:text-[13px]"
+                        ? "[overflow-wrap:anywhere] rounded-[15px] rounded-tr-[5px] bg-gradient-to-br from-[#6656ec] to-[#5142df] px-[13px] py-[11px] text-[12px] leading-[1.65] text-white shadow-[0_4px_10px_rgba(87,72,222,0.14)] max-[520px]:text-[13px]"
+                        : "[overflow-wrap:anywhere] rounded-[5px] rounded-tr-[15px] rounded-br-[15px] rounded-bl-[15px] border border-[#eff0f6] bg-[#f4f5fa] px-[13px] py-[11px] text-[12px] leading-[1.65] text-[#4d5969] max-[520px]:text-[13px]"
                     }
                   >
                     {message.content}
@@ -330,8 +332,8 @@ export default function ShoppingAssistant() {
       )}
 
       {!isOpen && (
-        <div className="pointer-events-auto relative flex justify-end max-[520px]:absolute max-[520px]:bottom-[max(18px,env(safe-area-inset-bottom))] max-[520px]:right-[max(18px,env(safe-area-inset-right))]">
-          <div className="pointer-events-none absolute right-[74px] top-1/2 -translate-y-1/2 translate-x-[5px] whitespace-nowrap rounded-[10px] bg-[#272345] px-3 py-[9px] text-[11px] font-semibold text-white opacity-0 shadow-[0_7px_20px_rgba(30,24,74,0.16)] transition group-hover:translate-x-0 group-hover:opacity-100">
+        <div className="group/launcher pointer-events-auto relative flex justify-end max-[520px]:absolute max-[520px]:bottom-[max(18px,env(safe-area-inset-bottom))] max-[520px]:right-[max(18px,env(safe-area-inset-right))]">
+          <div className="pointer-events-none absolute right-[74px] top-1/2 -translate-y-1/2 translate-x-[5px] whitespace-nowrap rounded-[10px] bg-[#272345] px-3 py-[9px] text-[11px] font-semibold text-white opacity-0 shadow-[0_7px_20px_rgba(30,24,74,0.16)] transition group-hover/launcher:translate-x-0 group-hover/launcher:opacity-100">
             Need a hand choosing?
           </div>
           <button
