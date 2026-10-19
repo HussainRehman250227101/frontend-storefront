@@ -46,7 +46,7 @@ type Message = {
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
-).replace(/\\/$/, "");
+).replace(/\/+$/, "");
 
 function formatPrice(value: string | number) {
   const numericPrice = Number(value);
@@ -58,7 +58,7 @@ function formatPrice(value: string | number) {
 
 function getImageUrl(image?: string | null) {
   if (!image) return undefined;
-  if (/^https?:\\/\\//i.test(image)) return image;
+  if (/^https?:\/\//i.test(image)) return image;
   return `${API_BASE_URL}${image.startsWith("/") ? "" : "/"}${image}`;
 }
 
