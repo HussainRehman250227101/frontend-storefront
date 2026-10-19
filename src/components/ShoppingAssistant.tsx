@@ -17,8 +17,24 @@ type Product = {
   title: string;
   price: string;
   rating: string;
-  image: string;
+  image?: string;
   badge?: string;
+};
+
+type ApiProduct = {
+  id: string | number;
+  title: string;
+  price: string | number;
+  rating?: string | number | null;
+  image?: string | null;
+  in_stock?: boolean;
+};
+
+type ApiResponse = {
+  message?: string;
+  intent?: string;
+  products?: ApiProduct[];
+  detail?: string;
 };
 
 type Message = {
@@ -28,23 +44,37 @@ type Message = {
   products?: Product[];
 };
 
-const demoProducts: Product[] = [
-  {
-    id: "iphone-15",
-    title: "iPhone 15 · 128GB",
-    price: "Rs. 214,999",
-    rating: "4.8",
-    image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=240&q=85",
-    badge: "Best value",
-  },
-  {
-    id: "galaxy-a55",
-    title: "Samsung Galaxy A55",
-    price: "Rs. 139,999",
-    rating: "4.6",
-    image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=240&q=85",
-  },
-];
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"
+).replace(/\\/$/, "");
+
+function formatPrice(value: string | number) {
+  const numericPrice = Number(value);
+  if (!Number.isFinite(numericPrice)) return String(value);
+  return `Rs. ${numericPrice.toLocaleString("en-PK", {
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+function getImageUrl(image?: string | null) {
+  if (!image) return undefined;
+  if (/^https?:\\/\\//i.test(image)) return image;
+  return `${API_BASE_URL}${image.startsWith("/") ? "" : "/"}${image}`;
+}
+
+function mapApiProduct(product: ApiProduct): Product {
+  return {
+    id: String(product.id),
+    title: product.title,
+    price: formatPrice(product.price),
+    rating:
+      product.rating === null || product.rating === undefined
+        ? "N/A"
+        : Number(product.rating).toFixed(1),
+    image: getImageUrl(product.image),
+    badge: product.in_stock === false ? "Out of stock" : undefined,
+  };
+}
 
 const suggestions = [
   { icon: ShoppingBag, label: "Find the cheapest phone" },
@@ -77,7 +107,7 @@ export default function ShoppingAssistant() {
     }
   }, [isOpen, messages, isTyping]);
 
-  const sendMessage = (value: string) => {
+  const sendMessage = async (value: string) => {
     const text = value.trim();
     if (!text || isTyping) return;
 
@@ -88,33 +118,47 @@ export default function ShoppingAssistant() {
     setInput("");
     setIsTyping(true);
 
-    // UI-only placeholder. Connect this to the shopping-assistant API in the next step.
-    window.setTimeout(() => {
-      const normalized = text.toLowerCase();
-      const response =
-        normalized.includes("iphone") ||
-        normalized.includes("rated") ||
-        normalized.includes("cheap")
-          ? "I’ve got a couple of popular picks to get you started. Once I’m connected to the store catalogue, I’ll compare live prices and ratings for your exact request."
-          : "Got it! I can help compare phones by price, rating, and features. Next, I’ll connect this chat to your live product catalogue so recommendations use real store data.";
+    try {
+      const response = await fetch(`${API_BASE_URL}/store/assistant/chat/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+
+      const data = (await response.json()) as ApiResponse;
+      if (!response.ok) {
+        throw new Error(
+          data.detail || data.message || `Request failed (HTTP ${response.status})`,
+        );
+      }
+
+      const products = Array.isArray(data.products)
+        ? data.products.map(mapApiProduct)
+        : [];
 
       setMessages((current) => [
         ...current,
         {
           id: Date.now() + 1,
           role: "assistant",
-          content: response,
-          products:
-            normalized.includes("phone") ||
-            normalized.includes("iphone") ||
-            normalized.includes("cheap") ||
-            normalized.includes("rated")
-              ? demoProducts
-              : undefined,
+          content: data.message || "Here are the results I found.",
+          products: products.length ? products : undefined,
         },
       ]);
+    } catch (error) {
+      const reason =
+        error instanceof Error ? error.message : "An unexpected error occurred.";
+      setMessages((current) => [
+        ...current,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: `Sorry, I couldn't connect to the shopping service. ${reason} Make sure Django is running and the API address is correct.`,
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 650);
+    }
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -223,12 +267,20 @@ export default function ShoppingAssistant() {
                           key={product.id}
                         >
                           <div className="grid h-[77px] w-[67px] shrink-0 place-items-center overflow-hidden rounded-[10px] bg-[#f5f6fa]">
-                            <img
-                              className="h-full w-full object-cover"
-                              src={product.image}
-                              alt={product.title}
-                              loading="lazy"
-                            />
+                            {product.image ? (
+                              <img
+                                className="h-full w-full object-cover"
+                                src={product.image}
+                                alt={product.title}
+                                loading="lazy"
+                              />
+                            ) : (
+                              <ShoppingBag
+                                className="text-[#b6b9c8]"
+                                size={24}
+                                aria-hidden="true"
+                              />
+                            )}
                           </div>
                           <div className="flex min-w-0 flex-col items-start gap-1 pr-[10px]">
                             {product.badge && (
